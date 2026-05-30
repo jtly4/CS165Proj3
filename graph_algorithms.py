@@ -94,7 +94,7 @@ def get_clustering_coefficient(graph: Graph) -> float:
 
 	#print(f"cluster_total: {cluster_total}")
 	
-	cluster_avg = cluster_total / total_nodes
+	cluster_avg = round((cluster_total / total_nodes), 4)
 
 	return cluster_avg
 
