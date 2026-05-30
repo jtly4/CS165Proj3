@@ -40,7 +40,6 @@ class Graph:
 			#if self.get_num_nodes > 0:
 			#	self._set_nodes()
 
-		
 		for edge in self.edges:
 			node1 = edge[0]
 			node2 = edge[1]
@@ -58,6 +57,33 @@ class Graph:
 		
 		else:
 			return self.neighbors[node]
+		
+	def are_neighbors(self, node1: int, node2: int) -> bool:		
+		neighbors1 = self.get_neighbors(node1)
+		
+		if node2 in neighbors1:
+			return True
+		else:
+			return False
+		
+	def count_edges_between_neighbors(self, node):
+		print(f"checking node: {node}")
+		neighbors_to_check = self.get_neighbors(node)
+		print(f"neighbors to check: {neighbors_to_check}")
+		count = 0
+		for neighbor in neighbors_to_check:
+			neighbor_of_neighbor = self.get_neighbors(neighbor)
+			intersection = neighbors_to_check & neighbor_of_neighbor
+			print(f"neighbors of {neighbor}: {neighbor_of_neighbor}")
+			print(f"intersection of {node} and {neighbor}: {intersection}")
+			count += len(intersection)
+
+		count = count/2
+
+		return count
+		
+	def get_num_neighbors(self, node:int) -> int:
+		return len(self.get_neighbors(node))
 
 
 	# feel free to define new methods in addition to the above

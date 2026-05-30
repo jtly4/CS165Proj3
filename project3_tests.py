@@ -31,10 +31,12 @@ def graph_tests():
 	graph = create_and_verify_graph(2, {})
 	verify_neighbors(graph, 0, {})
 	verify_neighbors(graph, 1, {})
+	print(graph.get_num_neighbors(0))
 
 	graph = create_and_verify_graph(2, {(0, 1)})
 	verify_neighbors(graph, 0, {1})
 	verify_neighbors(graph, 1, {0})
+	print(graph.get_num_neighbors(0))
 
 	graph = create_and_verify_graph(3, {})
 	verify_neighbors(graph, 0, {})
@@ -45,11 +47,13 @@ def graph_tests():
 	verify_neighbors(graph, 0, {1})
 	verify_neighbors(graph, 1, {0, 2})
 	verify_neighbors(graph, 2, {1})
+	print(graph.get_num_neighbors(1))
 
 	graph = create_and_verify_graph(3, {(0, 1), (1, 2), (0, 2)})
 	verify_neighbors(graph, 0, {1, 2})
 	verify_neighbors(graph, 1, {0, 2})
 	verify_neighbors(graph, 2, {0, 1})
+	print(graph.get_num_neighbors(2))
 
 def graph_algorithm_tests():
 	print('\ntesting graph algorithms\n')

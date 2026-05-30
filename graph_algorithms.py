@@ -2,8 +2,6 @@
 
 # Explanations for graph algorithm functions
 #
-# get_diameter(): return the approximate graph diameter using a heuristic function.
-# get_clustering_coefficient(): return the graph's global clustering coefficient.
 # get_degree_distribution(): returns a dictionary representing the degree distribution of the graph.
 #                            the keys are the degree, and the values is the number of nodes with that
 #                            degree.
@@ -56,14 +54,49 @@ def bfs_max_distance(graph:Graph) -> int:
 
 	return max(dis1, dis2)
 
+
+# get_diameter(): return the approximate graph diameter using a heuristic function.
 def get_diameter(graph: Graph) -> int:
 	if graph.get_num_nodes() < 10:
 		return bfs_max_distance(graph)
 	else:
 		return max(bfs_max_distance(graph), bfs_max_distance(graph), bfs_max_distance(graph))
 	
+
+	
+
+# get_clustering_coefficient(): return the graph's global clustering coefficient.
 def get_clustering_coefficient(graph: Graph) -> float:
-	raise NotImplementedError
+	clusters = {}
+	total_nodes = graph.get_num_nodes()
+	cluster_total = 0
+
+	for i in range(total_nodes):
+		# k = number of neighbors of u 
+		k = graph.get_num_neighbors(i)
+		print(f"k: {k}")
+
+		max_num_edges = (k * (k-1))/2
+		print(f"max_num_edges: {max_num_edges}")
+
+		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
+		print(f"actual_neighbor_edges: {actual_neighbor_edges}")
+
+		cluster = (actual_neighbor_edges / max_num_edges)
+		clusters[i] = cluster
+		cluster_total += cluster
+		
+		#print(f"cluster: {cluster}")
+			
+
+	print("All the clusters of each node: ")
+	print(clusters)
+
+	print(f"cluster_total: {cluster_total}")
+	
+	cluster_avg = cluster_total / total_nodes
+
+	return cluster_avg
 
 
 def get_degree_distribution(graph: Graph) -> dict[int, int]:
