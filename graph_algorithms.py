@@ -63,10 +63,14 @@ def get_diameter(graph: Graph) -> int:
 		return max(bfs_max_distance(graph), bfs_max_distance(graph), bfs_max_distance(graph))
 	
 
-	
-
 # get_clustering_coefficient(): return the graph's global clustering coefficient.
 def get_clustering_coefficient(graph: Graph) -> float:
+	'''
+	neighbors = graph.neighbors
+	for key, values in neighbors.items():
+		print(key, ':', values)
+	print("="*10)
+	'''
 	clusters = {}
 	total_nodes = graph.get_num_nodes()
 	cluster_total = 0
@@ -74,26 +78,29 @@ def get_clustering_coefficient(graph: Graph) -> float:
 	for i in range(total_nodes):
 		# k = number of neighbors of u 
 		k = graph.get_num_neighbors(i)
-		#print(f"k: {k}")
-
 		max_num_edges = (k * (k-1))/2
-		#print(f"max_num_edges: {max_num_edges}")
-
+		'''
+		print("~"*10)
+		print(f"checking node {i}")
+		print(f"k: {k}")
+		print(f"max_num_edges: {max_num_edges}")
+		'''
+		
 		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
 		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
-
-		cluster = (actual_neighbor_edges / max_num_edges)
-		clusters[i] = cluster
-		cluster_total += cluster
+		try:
+			cluster = (actual_neighbor_edges / max_num_edges)
+		except ZeroDivisionError:
+			cluster = 0.0
 		
-		#print(f"cluster: {cluster}")
-			
-
-	#print("All the clusters of each node: ")
-	#print(clusters)
-
-	#print(f"cluster_total: {cluster_total}")
-	
+		clusters[i] = cluster
+		cluster_total += cluster			
+	'''
+	for key, values in clusters.items():
+		print(key, ':', values)
+	print("="*10)
+	print(f"cluster_total: {cluster_total}")
+	'''
 	cluster_avg = round((cluster_total / total_nodes), 4)
 
 	return cluster_avg

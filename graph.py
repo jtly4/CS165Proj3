@@ -67,9 +67,9 @@ class Graph:
 			return False
 		
 	def count_edges_between_neighbors(self, node):
-		#print(f"checking node: {node}")
 		neighbors_to_check = self.get_neighbors(node)
-		#print(f"neighbors to check: {neighbors_to_check}")
+		#print(f"neighbors of {node}: {neighbors_to_check}")
+		#print("-"*10)
 		count = 0
 		for neighbor in neighbors_to_check:
 			neighbor_of_neighbor = self.get_neighbors(neighbor)
