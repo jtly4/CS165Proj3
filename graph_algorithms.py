@@ -74,13 +74,13 @@ def get_clustering_coefficient(graph: Graph) -> float:
 	for i in range(total_nodes):
 		# k = number of neighbors of u 
 		k = graph.get_num_neighbors(i)
-		print(f"k: {k}")
+		#print(f"k: {k}")
 
 		max_num_edges = (k * (k-1))/2
-		print(f"max_num_edges: {max_num_edges}")
+		#print(f"max_num_edges: {max_num_edges}")
 
 		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
-		print(f"actual_neighbor_edges: {actual_neighbor_edges}")
+		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
 
 		cluster = (actual_neighbor_edges / max_num_edges)
 		clusters[i] = cluster
@@ -89,10 +89,10 @@ def get_clustering_coefficient(graph: Graph) -> float:
 		#print(f"cluster: {cluster}")
 			
 
-	print("All the clusters of each node: ")
-	print(clusters)
+	#print("All the clusters of each node: ")
+	#print(clusters)
 
-	print(f"cluster_total: {cluster_total}")
+	#print(f"cluster_total: {cluster_total}")
 	
 	cluster_avg = cluster_total / total_nodes
 
