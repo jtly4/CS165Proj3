@@ -95,8 +95,6 @@ def get_clustering_coefficient(graph: Graph) -> float:
 		if max_num_edges == 0:
 			cluster = 0.0
 			#print(f"node {i}: k={k}, max_num_edges={max_num_edges}, type={type(max_num_edges)}")
-			
-			
 		else: 
 			cluster = (actual_neighbor_edges / max_num_edges)
 		
@@ -108,7 +106,7 @@ def get_clustering_coefficient(graph: Graph) -> float:
 	print("="*10)
 	print(f"cluster_total: {cluster_total}")
 	'''
-	cluster_avg = round_down((cluster_total / total_nodes), 1)
+	cluster_avg = round_down((cluster_total / total_nodes), 2)
 
 	return cluster_avg
 
