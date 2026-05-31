@@ -75,20 +75,33 @@ def get_clustering_coefficient(graph: Graph) -> float:
 		print(key, ':', values)
 	print("="*10)
 	'''
-	clusters = {}
+	# clusters = {}
 	total_nodes = graph.get_num_nodes()
 	cluster_total = 0
+	triangles = counting_triangles(graph)
+	two_paths = 0
 
+	for i in range(total_nodes):
+		k = graph.get_num_neighbors(i)
+		max_num_edges = (k * (k-1))/2
+		two_paths += max_num_edges
+
+	coeff = (3 * triangles) / two_paths
+
+	return coeff
+
+
+	'''
 	for i in range(total_nodes):
 		# k = number of neighbors of u 
 		k = graph.get_num_neighbors(i)
 		max_num_edges = (k * (k-1))/2
-		'''
+		
 		print("~"*10)
 		print(f"checking node {i}")
 		print(f"k: {k}")
 		print(f"max_num_edges: {max_num_edges}")
-		'''
+		
 		
 		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
 		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
@@ -96,33 +109,101 @@ def get_clustering_coefficient(graph: Graph) -> float:
 			cluster = 0.0
 			#print(f"node {i}: k={k}, max_num_edges={max_num_edges}, type={type(max_num_edges)}")
 		else: 
-			cluster = (actual_neighbor_edges / max_num_edges)
+			cluster = (triangles / max_num_edges)
 		
 		clusters[i] = cluster
 		cluster_total += cluster			
-	'''
+	
 	for key, values in clusters.items():
 		print(key, ':', values)
 	print("="*10)
 	print(f"cluster_total: {cluster_total}")
-	'''
+	
 	cluster_avg = round_down((cluster_total / total_nodes), 1)
+	'''
+	
+	
 
-	return cluster_avg
 
 
-def get_degree_distribution(graph: Graph) -> dict[int, int]:
+def degree_degen(graph: Graph):
 	total_nodes = graph.get_num_nodes()
-	distribution = {}
+	distribution_amount = {}
+	distribution_nodes = {}
+	#ordering = {}
+	#smallest_deg = float('inf')
 
 	for i in range(total_nodes):
 		degree = graph.get_num_neighbors(i)
-		if degree not in distribution:
-			distribution[degree] = 0
+		if degree not in distribution_amount:
+			distribution_amount[degree] = 0
+			distribution_nodes[degree] = deque()
+			#ordering[degree] = deque()
+		#if degree < smallest_deg:
+			#smallest_deg = degree
 		
-		distribution[degree] += 1
+		distribution_amount[degree] += 1
+		distribution_nodes[degree].append(i)
+		#ordering[degree].append(i)
 
-	return distribution
+	return [distribution_amount, distribution_nodes]
+	
+
+def degen_ordering(graph: Graph):
+	total_nodes = graph.get_num_nodes()
+	items = degree_degen(graph)
+	# ordering = dict(sorted(items[1].items()))
+	current_degree = {i: graph.get_num_neighbors(i) for i in range(total_nodes)}
+
+	L = []
+	D = dict(sorted(items[1].items()))
+	HL = set()
+	Nv = {i: [] for i in range(total_nodes)}
+
+	
+	for i in range(total_nodes):
+		smallest_deg = min(k for k in D if len(D[k]) > 0)
+		vertex = D[smallest_deg].popleft()
+		L.append(vertex)
+		HL.add(vertex)
+
+		for neighbor in graph.get_neighbors(vertex):
+			
+			if neighbor not in HL:
+				neighbor_deg = current_degree[neighbor]
+				current_degree[neighbor] -= 1
+				D[neighbor_deg].remove(neighbor)
+				if (neighbor_deg - 1) not in D:
+					D[neighbor_deg - 1] = deque()
+				D[neighbor_deg - 1].append(neighbor)
+				Nv[neighbor].append(vertex)
+
+	return [L, Nv]
+				
+
+def counting_triangles(graph: Graph):
+	triangles = 0
+	items = degen_ordering(graph)
+	L = items[0]
+	Nv = items[1]
+
+	for vertex in L:
+		earlier_neighbors = Nv[vertex]
+		for i in range(len(earlier_neighbors)):
+			for j in range(i+1, len(earlier_neighbors)):
+				u = earlier_neighbors[i]
+				w = earlier_neighbors[j]
+				if graph.are_neighbors(u, w):
+					triangles += 1
+
+	return triangles
+
+
+
+
+def get_degree_distribution(graph: Graph) -> dict[int, int]:
+	ans = degree_degen(graph)[0]
+	return ans
 
 #print(0.0/0.0)
 #print((0 * (0-1)) / 2)
