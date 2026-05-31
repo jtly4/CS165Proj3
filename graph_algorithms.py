@@ -92,11 +92,13 @@ def get_clustering_coefficient(graph: Graph) -> float:
 		
 		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
 		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
-		try:
-			cluster = round_down((actual_neighbor_edges / max_num_edges), 2)
-			
-		except ZeroDivisionError:
+		if max_num_edges == 0:
 			cluster = 0.0
+			#print(f"node {i}: k={k}, max_num_edges={max_num_edges}, type={type(max_num_edges)}")
+			
+			
+		else: 
+			cluster = (actual_neighbor_edges / max_num_edges)
 		
 		clusters[i] = cluster
 		cluster_total += cluster			
@@ -113,3 +115,6 @@ def get_clustering_coefficient(graph: Graph) -> float:
 
 def get_degree_distribution(graph: Graph) -> dict[int, int]:
 	raise NotImplementedError
+
+#print(0.0/0.0)
+#print((0 * (0-1)) / 2)
