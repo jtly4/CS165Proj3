@@ -106,13 +106,23 @@ def get_clustering_coefficient(graph: Graph) -> float:
 	print("="*10)
 	print(f"cluster_total: {cluster_total}")
 	'''
-	cluster_avg = round_down((cluster_total / total_nodes), 2)
+	cluster_avg = round_down((cluster_total / total_nodes), 1)
 
 	return cluster_avg
 
 
 def get_degree_distribution(graph: Graph) -> dict[int, int]:
-	raise NotImplementedError
+	total_nodes = graph.get_num_nodes()
+	distribution = {}
+
+	for i in range(total_nodes):
+		degree = graph.get_num_neighbors(i)
+		if degree not in distribution:
+			distribution[degree] = 0
+		
+		distribution[degree] += 1
+
+	return distribution
 
 #print(0.0/0.0)
 #print((0 * (0-1)) / 2)
