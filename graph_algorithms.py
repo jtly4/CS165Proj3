@@ -9,6 +9,7 @@
 from graph import Graph
 import random
 from collections import deque
+import math
 
 '''
 first bfs (bfs random) = random node to get the furthest node 
@@ -62,6 +63,9 @@ def get_diameter(graph: Graph) -> int:
 	else:
 		return max(bfs_max_distance(graph), bfs_max_distance(graph), bfs_max_distance(graph))
 	
+def round_down(val, dec=0):
+	scale = 10 ** dec
+	return math.floor(val * scale) / scale
 
 # get_clustering_coefficient(): return the graph's global clustering coefficient.
 def get_clustering_coefficient(graph: Graph) -> float:
@@ -89,7 +93,8 @@ def get_clustering_coefficient(graph: Graph) -> float:
 		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
 		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
 		try:
-			cluster = (actual_neighbor_edges / max_num_edges)
+			cluster = round_down((actual_neighbor_edges / max_num_edges), 2)
+			
 		except ZeroDivisionError:
 			cluster = 0.0
 		
@@ -101,7 +106,7 @@ def get_clustering_coefficient(graph: Graph) -> float:
 	print("="*10)
 	print(f"cluster_total: {cluster_total}")
 	'''
-	cluster_avg = round((cluster_total / total_nodes), 4)
+	cluster_avg = round_down((cluster_total / total_nodes), 1)
 
 	return cluster_avg
 
