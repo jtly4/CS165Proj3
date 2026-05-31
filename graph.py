@@ -14,6 +14,7 @@
 #                  each neighbor should appear exactly once.
 
 from collections.abc import Iterable
+from collections import deque
 
 class Graph:
 	def __init__(self, num_nodes: int, edges: Iterable[tuple[int, int]]):
@@ -23,15 +24,19 @@ class Graph:
 		self.edges = edges
 		self.neighbors = {}
 		self._set_neighbors(edges)
+		self.degree_distribution_amount = {}
+		self.degree_distribution_nodes = {}
+		self.degree_degen()
+
+	# degree_distribution_amount = degrees : num nodes that have that degree
+	# degree_distribution_nodes = degrees : which nodes have that many degrees
+		
 
 	def get_num_nodes(self) -> int:
 		return self.num_nodes
 
 	def get_num_edges(self) -> int:
 		return len(self.edges)
-	
-	def _set_nodes(self):
-		pass
 	
 	def _set_neighbors(self, edges):
 		if not edges:
@@ -84,6 +89,17 @@ class Graph:
 		
 	def get_num_neighbors(self, node:int) -> int:
 		return len(self.get_neighbors(node))
+	
+	def degree_degen(self):
+		for i in range(self.num_nodes):
+			degree = self.get_num_neighbors(i)
+			if degree not in self.degree_distribution_amount:
+				self.degree_distribution_amount[degree] = 0
+				self.degree_distribution_nodes[degree] = deque()
+		
+			self.degree_distribution_amount[degree] += 1
+			self.degree_distribution_nodes[degree].append(i)
+		
 
 
 	# feel free to define new methods in addition to the above

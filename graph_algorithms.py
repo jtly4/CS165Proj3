@@ -1,10 +1,6 @@
 # explanations for these functions are provided in requirements.py
 
-# Explanations for graph algorithm functions
-#
-# get_degree_distribution(): returns a dictionary representing the degree distribution of the graph.
-#                            the keys are the degree, and the values is the number of nodes with that
-#                            degree.
+
 
 from graph import Graph
 import random
@@ -67,100 +63,15 @@ def round_down(val, dec=0):
 	scale = 10 ** dec
 	return math.floor(val * scale) / scale
 
-# get_clustering_coefficient(): return the graph's global clustering coefficient.
-def get_clustering_coefficient(graph: Graph) -> float:
-	'''
-	neighbors = graph.neighbors
-	for key, values in neighbors.items():
-		print(key, ':', values)
-	print("="*10)
-	'''
-	# clusters = {}
-	total_nodes = graph.get_num_nodes()
-	cluster_total = 0
-	triangles = counting_triangles(graph)
-	two_paths = 0
-
-	for i in range(total_nodes):
-		k = graph.get_num_neighbors(i)
-		max_num_edges = (k * (k-1))/2
-		two_paths += max_num_edges
-
-	coeff = (3 * triangles) / two_paths
-
-	return coeff
-
-
-	'''
-	for i in range(total_nodes):
-		# k = number of neighbors of u 
-		k = graph.get_num_neighbors(i)
-		max_num_edges = (k * (k-1))/2
-		
-		print("~"*10)
-		print(f"checking node {i}")
-		print(f"k: {k}")
-		print(f"max_num_edges: {max_num_edges}")
-		
-		
-		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
-		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
-		if max_num_edges == 0:
-			cluster = 0.0
-			#print(f"node {i}: k={k}, max_num_edges={max_num_edges}, type={type(max_num_edges)}")
-		else: 
-			cluster = (triangles / max_num_edges)
-		
-		clusters[i] = cluster
-		cluster_total += cluster			
-	
-	for key, values in clusters.items():
-		print(key, ':', values)
-	print("="*10)
-	print(f"cluster_total: {cluster_total}")
-	
-	cluster_avg = round_down((cluster_total / total_nodes), 1)
-	'''
-	
-	
-
-
-
-def degree_degen(graph: Graph):
-	total_nodes = graph.get_num_nodes()
-	distribution_amount = {}
-	distribution_nodes = {}
-	#ordering = {}
-	#smallest_deg = float('inf')
-
-	for i in range(total_nodes):
-		degree = graph.get_num_neighbors(i)
-		if degree not in distribution_amount:
-			distribution_amount[degree] = 0
-			distribution_nodes[degree] = deque()
-			#ordering[degree] = deque()
-		#if degree < smallest_deg:
-			#smallest_deg = degree
-		
-		distribution_amount[degree] += 1
-		distribution_nodes[degree].append(i)
-		#ordering[degree].append(i)
-
-	return [distribution_amount, distribution_nodes]
-	
-
 def degen_ordering(graph: Graph):
 	total_nodes = graph.get_num_nodes()
-	items = degree_degen(graph)
-	# ordering = dict(sorted(items[1].items()))
 	current_degree = {i: graph.get_num_neighbors(i) for i in range(total_nodes)}
 
 	L = []
-	D = dict(sorted(items[1].items()))
+	D = dict(sorted(graph.degree_distribution_nodes.items()))
 	HL = set()
 	Nv = {i: [] for i in range(total_nodes)}
 
-	
 	for i in range(total_nodes):
 		smallest_deg = min(k for k in D if len(D[k]) > 0)
 		vertex = D[smallest_deg].popleft()
@@ -198,12 +109,59 @@ def counting_triangles(graph: Graph):
 
 	return triangles
 
+# get_clustering_coefficient(): return the graph's global clustering coefficient.
+def get_clustering_coefficient(graph: Graph) -> float:
+
+	total_nodes = graph.get_num_nodes()
+	cluster_total = 0
+	triangles = counting_triangles(graph)
+	two_paths = 0
+
+	for i in range(total_nodes):
+		k = graph.get_num_neighbors(i)
+		max_num_edges = (k * (k-1))/2
+		two_paths += max_num_edges
+
+	coeff = (3 * triangles) / two_paths
+
+	return coeff
 
 
+	'''
+	for i in range(total_nodes):
+		# k = number of neighbors of u 
+		k = graph.get_num_neighbors(i)
+		max_num_edges = (k * (k-1))/2
+		
+		print("~"*10)
+		print(f"checking node {i}")
+		print(f"k: {k}")
+		print(f"max_num_edges: {max_num_edges}")
+		
+		
+		actual_neighbor_edges = graph.count_edges_between_neighbors(i)
+		#print(f"actual_neighbor_edges: {actual_neighbor_edges}")
+		if max_num_edges == 0:
+			cluster = 0.0
+		else: 
+			cluster = (triangles / max_num_edges)
+		
+		clusters[i] = cluster
+		cluster_total += cluster			
+	
+	for key, values in clusters.items():
+		print(key, ':', values)
+	print("="*10)
+	print(f"cluster_total: {cluster_total}")
+	
+	cluster_avg = round_down((cluster_total / total_nodes), 1)
+	'''
+	
+
+
+# get_degree_distribution(): returns a dictionary representing the degree distribution of the graph.
+#                            the keys are the degree, and the values is the number of nodes with that
+#                            degree.
 
 def get_degree_distribution(graph: Graph) -> dict[int, int]:
-	ans = degree_degen(graph)[0]
-	return ans
-
-#print(0.0/0.0)
-#print((0 * (0-1)) / 2)
+	return graph.degree_distribution_amount
